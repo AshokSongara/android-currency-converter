@@ -60,30 +60,36 @@ public class CurrencyRateParser_ECB {
 		return data;
 	}
 	
-	public void StartParser(String szURL) {
+	public boolean StartParser(String szURL) {
 		if(createParser() == true) {
 			try {
 				URL url = new URL(szURL);
 				InputStream steam = url.openStream();
 				xr.parse(new InputSource(steam));
+				return true;
 			} catch (Exception e) {
 				Log.e(TAG, "Cannot start parser for Input steam");
 				data.clear();
 			}
 		}
+		
+		return false;
 	}
 	
-	public void StartParser(Context context, int raw_src_id) {
+	public boolean StartParser(Context context, int raw_src_id) {
 		Resources	res = context.getResources();
 		
 		if(createParser() == true) {
 			try {
 				xr.parse(new InputSource(res.openRawResource(raw_src_id)));
+				return true;
 			} catch (Exception e) {
 				Log.e(TAG, "Cannot start parser for resource " + Integer.toString(raw_src_id));
 				data.clear();
 			}
 		}
+		
+		return false;
 	}
 	
 	private class MyHandler extends DefaultHandler {

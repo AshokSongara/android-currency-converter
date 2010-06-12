@@ -141,8 +141,8 @@ public class CurrencyConverterDB {
 	}
 	
 	// database variables
-	private CCDB_Helper				helper;
-	private static SQLiteDatabase	core_db = null;
+	private CCDB_Helper		helper;
+	private SQLiteDatabase	core_db = null;
 	
 	public CurrencyConverterDB(Context context) {
 		helper = new CCDB_Helper(context);		
@@ -157,6 +157,7 @@ public class CurrencyConverterDB {
 		if(core_db.isOpen()) {
 			Log.d(TAG, "Close database...");
 			core_db.close();
+			core_db = null;
 		}
 	}
 	
@@ -175,7 +176,7 @@ public class CurrencyConverterDB {
 	
 	// get rate by given currency name
 	public double GetRates(String name) {
-		Cursor	result;
+		Cursor	result = null;
 		String	str_sql = "SELECT " + COL_CC_RATE + " FROM " + TABLE_CC_RATE + " WHERE " + COL_CC_NAME + "= ?";
 		double	result_rate = 0;
 		
@@ -189,6 +190,7 @@ public class CurrencyConverterDB {
 			}
 			
 			result.close();
+			result = null;
 		} catch (Exception e) {
 			Log.e(TAG, "GetRates:" + e.toString());
 		}

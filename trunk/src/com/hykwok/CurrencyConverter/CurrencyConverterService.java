@@ -23,7 +23,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -54,7 +53,8 @@ public class CurrencyConverterService extends Service {
 	private CurrencyInternetConnection	cc_connection;
 	private CurrencyRateParser_ECB		cc_parser_ECB;
 	
-	private Handler objHandler = new Handler();
+	private Thread parser_thread;
+	private boolean parser_thread_alive = true;
 
 	@Override
 	public IBinder onBind(Intent i) {
@@ -103,10 +103,10 @@ public class CurrencyConverterService extends Service {
 		ref_time = i.getExtras().getLong(BROADCAST_KEY_LASTUPDATETIME);
 		ref_roaming = i.getExtras().getBoolean(BROADCAST_KEY_ROAMING_OPT, false);
 		
-		// try to remove previous one from the message queue
-		objHandler.removeCallbacks(mTask);
-		// start checking now
-		objHandler.postDelayed(mTask, 10);
+		// start a new thread to handle database update
+		parser_thread_alive = true;
+		parser_thread = new Thread(mTask);
+		parser_thread.start();
 		
     	Log.d(TAG, "onStart <<<<<");
 	}
@@ -116,8 +116,9 @@ public class CurrencyConverterService extends Service {
 		Log.d(TAG, "onDestroy >>>>>");
 		super.onDestroy();
 		
-		objHandler.removeCallbacks(mTask);
-		
+		parser_thread_alive = false;
+		parser_thread.interrupt();
+				
 		// remove broadcast receiver
 		unregisterReceiver(my_intent_receiver);		
 		
@@ -128,33 +129,45 @@ public class CurrencyConverterService extends Service {
 	private Runnable mTask = new Runnable() {
 		long	timediff;
 		
-		public void run() {
-			timediff = getDiffTime(ref_time);
-			
-			// 86400000 = 24 * 60 * 60 * 1000ms = 1 day
-			if(timediff >= 86400000) {
-				// update
-				try {
-					boolean result = cc_connection.TestConnection(EU_BANK_XML_URL);
-					
-					if(result) {
-						cc_parser_ECB.StartParser(EU_BANK_XML_URL);
-						// update last update time
-						ref_time = System.currentTimeMillis();
-						
-						// send data to activity to update database
-						sendSettingToActivity();
-					}
-				} catch (Exception e) {
-					Log.e(TAG, "mTask: " + e.toString());
-				}
-			} else {
-				task_delay = 86400000 - timediff;
-				Log.d(TAG, "Task: Increase delay time: " + Double.toString((double)task_delay / 3600000) + " hour(s)");				
+		private void delay() {
+			try {
+				Thread.sleep(task_delay);
+			} catch (InterruptedException e) {
+				Log.d(TAG, "Parser thread receive interrupt");
 			}
-			
-			// call this task again
-			objHandler.postDelayed(mTask, task_delay);
+		}
+		
+		public void run() {
+			do {
+				timediff = getDiffTime(ref_time);
+				
+				// 86400000 = 24 * 60 * 60 * 1000ms = 1 day
+				if(timediff >= 86400000) {
+					// update
+					try {
+						boolean result = cc_connection.TestConnection(EU_BANK_XML_URL);
+						
+						if(result) {
+							if(cc_parser_ECB.StartParser(EU_BANK_XML_URL)) {
+								// update last update time
+								ref_time = System.currentTimeMillis();
+								
+								// send data to activity to update database
+								sendSettingToActivity();
+							}
+						}
+					} catch (Exception e) {
+						Log.e(TAG, "mTask: " + e.toString());
+					}
+				} else {
+					task_delay = 86400000 - timediff;
+					Log.d(TAG, "Task: Increase delay time: " + Double.toString((double)task_delay / 3600000) + " hour(s)");				
+				}
+				
+				// call this task again
+				delay();
+				
+			} while(parser_thread_alive);
 		}
 	};
 	
