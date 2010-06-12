@@ -16,6 +16,8 @@
 
 package com.hykwok.CurrencyConverter;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Locale;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -85,6 +87,9 @@ public class ActivityMain extends Activity {
 	private static final String KEY_SEL_CURRENCYA = "select_currencyA";
 	private static final String KEY_SEL_CURRENCYB = "select_currencyB";	
 	
+	// backup keys
+	private static final String KEY_BK_EDITTEXTA = "backup_edittext_A";
+	
 	// Message ID
 	private static final int GUI_UPDATE_LISTVIEW = 0x100;
 	
@@ -93,7 +98,7 @@ public class ActivityMain extends Activity {
 	private SharedPreferences 		mPrefs;
 	
 	private Spinner[] 				m_spinner_Currency = { null, null };
-	private TextView[] 				m_text_Currency = { null, null };
+	private EditText[] 				m_text_Currency = { null, null };
 	private TextView				m_text_BaseCurrency;
 	private CurrencyListAdapter		adapter_currencylist;
 	private ListView				m_listview_rate;
@@ -104,6 +109,7 @@ public class ActivityMain extends Activity {
 	private String[]				m_Selected_C = { " ", " " };
 	private int						m_current_active_currency = ITEM_CURRENCYA;
 	private String					m_ListViewSelected_C = "";
+	private String					m_SavedInstanceText = "";
 	
 	// preferences
 	private long					m_lastupdatetime;
@@ -131,8 +137,8 @@ public class ActivityMain extends Activity {
 	        // initialize control variables
 	        m_spinner_Currency[ITEM_CURRENCYA] = (Spinner) findViewById(R.id.SpinnerCurrencyA);
 	        m_spinner_Currency[ITEM_CURRENCYB] = (Spinner) findViewById(R.id.SpinnerCurrencyB);
-	        m_text_Currency[ITEM_CURRENCYA] = (TextView) findViewById(R.id.EditTextCurrencyA);
-	        m_text_Currency[ITEM_CURRENCYB] = (TextView) findViewById(R.id.EditTextCurrencyB);
+	        m_text_Currency[ITEM_CURRENCYA] = (EditText) findViewById(R.id.EditTextCurrencyA);
+	        m_text_Currency[ITEM_CURRENCYB] = (EditText) findViewById(R.id.EditTextCurrencyB);
 	        m_text_BaseCurrency = (TextView) findViewById(R.id.TextViewBaseCurrency);
 	        m_listview_rate = (ListView) findViewById(R.id.ListViewRate);
 	        
@@ -141,6 +147,16 @@ public class ActivityMain extends Activity {
 	        
 	        // use global database
 	        m_DB = new CurrencyConverterDB(this);
+	        
+	        if(savedInstanceState != null) {
+	        	// just restore edit text box firstly
+	        	String text_CA = savedInstanceState.getString(KEY_BK_EDITTEXTA);
+	        	
+	        	Log.d(TAG, "txt_CA=" + text_CA);
+	        	
+	        	m_SavedInstanceText = text_CA;
+	        	m_text_Currency[ITEM_CURRENCYA].setText(text_CA);	        	
+	        }
 	        
 	        // create currency list adapter
 	        adapter_currencylist = new CurrencyListAdapter(this, CurrencyConverterDB.currency_name, CurrencyConverterDB.currency_icon);
@@ -177,13 +193,13 @@ public class ActivityMain extends Activity {
 	        adapter_currencyratelist.SetBaseCurrencyIndex(m_DB.GetCurrencyPosition(m_Base_C));
 	        m_text_BaseCurrency.setText(m_Base_C);
 	        
-	        m_Selected_C[ITEM_CURRENCYA] = mPrefs.getString(KEY_SEL_CURRENCYA, CurrencyConverterDB.currency_name[0]);
-	        m_Selected_C[ITEM_CURRENCYB] = mPrefs.getString(KEY_SEL_CURRENCYB, CurrencyConverterDB.currency_name[0]);
+        	m_Selected_C[ITEM_CURRENCYA] = mPrefs.getString(KEY_SEL_CURRENCYA, CurrencyConverterDB.currency_name[0]);
+        	m_Selected_C[ITEM_CURRENCYB] = mPrefs.getString(KEY_SEL_CURRENCYB, CurrencyConverterDB.currency_name[0]);
 	        
-	        // register broadcast receiver
-			IntentFilter filter = new IntentFilter(SERVICE_TO_ACTIVITY_BROADCAST);
-			my_intent_receiver = new Broadcast_Receiver();
-			registerReceiver(my_intent_receiver, filter);
+        	// register broadcast receiver
+        	IntentFilter filter = new IntentFilter(SERVICE_TO_ACTIVITY_BROADCAST);
+        	my_intent_receiver = new Broadcast_Receiver();
+        	registerReceiver(my_intent_receiver, filter);
         } catch (Exception e) {
         	Log.e(TAG, "onCreate:" + e.toString());
         }
@@ -206,6 +222,10 @@ public class ActivityMain extends Activity {
 			
 			m_lastupdatetime = mPrefs.getLong(KEY_LASTUPDATETIME, 0);
     		m_enableRoaming = mPrefs.getBoolean(KEY_ROAMING_OPT, false);
+
+    		TextView lastupdatetext = (TextView)findViewById(R.id.TextViewLastUpdate);
+    		String sztime = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT).format(new Date(m_lastupdatetime));
+    		lastupdatetext.setText(sztime);
     		    		
 	    	if(mPrefs.getBoolean(KEY_SERVICE_OPT, false) == true) {
 	    		i.putExtra(BROADCAST_KEY_ROAMING_OPT, m_enableRoaming);
@@ -290,6 +310,20 @@ public class ActivityMain extends Activity {
     }
     
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    	Log.d(TAG, "MainActivity:onSaveInstanceState >>>>>");
+    	
+    	// backup current textview content
+    	String txt_CA = m_text_Currency[ITEM_CURRENCYA].getText().toString();
+    	
+    	Log.d(TAG, "txt_CA=" + txt_CA);
+    	
+    	outState.putString(KEY_BK_EDITTEXTA, txt_CA);
+    	
+    	Log.d(TAG, "MainActivity:onSaveInstanceState <<<<<");
+    }
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	MenuItem menu_item;
     	
@@ -340,7 +374,7 @@ public class ActivityMain extends Activity {
     }
     
     @Override
-    protected void  onPrepareDialog  (int id, Dialog  dialog) {
+    protected void onPrepareDialog(int id, Dialog dialog) {
     	switch(id) {
     		case DIALOG_CURRENCYEDIT:
     			EditText inputvalue = (EditText) dialog.findViewById(R.id.CurrencyEdit_Input);
@@ -486,7 +520,7 @@ public class ActivityMain extends Activity {
     };
     
     private OnFocusChangeListener focusListener_Currency = new OnFocusChangeListener() {
-    	int	nSelected = 0;    	
+    	int	nSelected = 0, len;    	
     	String	m_current_input_value = "";
 
 		public void onFocusChange(View v, boolean hasFocus) {
@@ -499,19 +533,26 @@ public class ActivityMain extends Activity {
 			m_current_input_value = m_text_Currency[nSelected].getText().toString();
 			
 			if(hasFocus) {
-				Log.d(TAG, "Currency [" + Integer.toString(nSelected) + "] EditText on focus.");
-				if(m_current_input_value.length() > 0) {
-					m_current_input_value = "";
+				Log.d(TAG, "Currency [" + Integer.toString(nSelected) + "] EditText on focus. text=" + m_current_input_value);
+				len = m_current_input_value.length();
+				if(len > 0) {
+					if(m_current_input_value.compareTo(m_SavedInstanceText) == 0) {
+						m_SavedInstanceText = "";
+						// move the cursor to the end of the text
+						m_text_Currency[nSelected].setSelection(len);
+					} else {
+						m_current_input_value = "";
+						m_text_Currency[nSelected].setText(m_current_input_value);
+					}
 				}
 				m_current_active_currency = nSelected;
 			} else {
-				Log.d(TAG, "Currency [" + Integer.toString(nSelected) + "] EditText loss focus.");
+				Log.d(TAG, "Currency [" + Integer.toString(nSelected) + "] EditText loss focus. text=" + m_current_input_value);
 				if(m_current_input_value.length() == 0) {
 					m_current_input_value = formCurrencyDisplay(0);
+					m_text_Currency[nSelected].setText(m_current_input_value);
 				}
 			}
-			
-			m_text_Currency[nSelected].setText(m_current_input_value);
 		}
     };
     
@@ -780,6 +821,10 @@ public class ActivityMain extends Activity {
 					adapter_currencyratelist.updateCurrencyRate();
 					adapter_currencyratelist.SetBaseCurrencyIndex(m_DB.GetCurrencyPosition(m_Base_C));
     				adapter_currencyratelist.notifyDataSetChanged();
+					// update last update time message
+					TextView lastupdatetext = (TextView)findViewById(R.id.TextViewLastUpdate);
+					String sztime = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT).format(new Date(m_lastupdatetime));
+					lastupdatetext.setText(sztime);
     				break;
     		}
     		

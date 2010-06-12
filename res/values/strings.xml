@@ -62,5 +62,6 @@
 	<string name="preferences_name">Preferences</string>
 	<string name="Dialog_OK">OK</string>
 	<string name="Dialog_Cancel">Cancel</string>
+	<string name="szLastUpdate">Last Update:</string>
 	
 </resources>
