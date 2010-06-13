@@ -64,8 +64,8 @@ public class CurrencyRateParser_ECB {
 		if(createParser() == true) {
 			try {
 				URL url = new URL(szURL);
-				InputStream steam = url.openStream();
-				xr.parse(new InputSource(steam));
+				InputStream stream = url.openStream();
+				xr.parse(new InputSource(stream));
 				return true;
 			} catch (Exception e) {
 				Log.e(TAG, "Cannot start parser for Input steam");
