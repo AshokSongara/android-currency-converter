@@ -106,7 +106,7 @@ public class CurrencyConverterDB {
 				
 				// if database is not existed, create new tables
 				str_sql = "CREATE TABLE " + TABLE_CC_RATE + " ( " +
-				          COL_CC_NAME + " TEXT, " +
+				          COL_CC_NAME + " TEXT" +  ", " +
 				          COL_CC_RATE + " FLOAT" +
 				          " );";
 				Log.d(TAG, "setup tables: SQL="+str_sql);
