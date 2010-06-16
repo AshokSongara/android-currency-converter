@@ -177,7 +177,7 @@ public class CurrencyConverterService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// receive intent from activity
-			Log.d(TAG, "send data from activity >>>>>");
+			Log.d(TAG, "receive data from activity >>>>>");
 			
 			try {
 				ref_time = intent.getExtras().getLong(BROADCAST_KEY_LASTUPDATETIME);
