@@ -70,8 +70,8 @@ public class ActivityMain extends Activity {
 	private static final int DIALOG_CURRENCYEDIT = 2;
 	
 	// Intent string for broadcasting
-	private static final String ACTIVITY_TO_SERVICE_BROADCAST = "com.hykwok.action.A_TO_S_BROADCAST";
-	private static final String SERVICE_TO_ACTIVITY_BROADCAST = "com.hykwok.action.S_TO_A_BROADCAST";
+	private static final String ACTIVITY_TO_SERVICE_BROADCAST = "com.hykwok.action.CC_A_TO_S_BROADCAST";
+	private static final String SERVICE_TO_ACTIVITY_BROADCAST = "com.hykwok.action.CC_S_TO_A_BROADCAST";
 	
 	// Intent key for broadcasting
 	private static final String BROADCAST_KEY_ROAMING_OPT = "roaming";

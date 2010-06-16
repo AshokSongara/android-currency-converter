@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -27,6 +29,7 @@ public class CurrencyInternetConnection {
 	// This variable is used for debug log (LogCat) 
 	private static final String TAG = "CC:InternetConnection";
 	private TelephonyManager	mPhoneMgr;
+	private WifiManager			mWIFIMgr;
 	
 	// flags
 	private boolean bAbleNetworkRoaming = false;
@@ -34,10 +37,37 @@ public class CurrencyInternetConnection {
 	public CurrencyInternetConnection(Context context) {
 		// get telephony service
 		mPhoneMgr = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+		// get WIFI service
+		mWIFIMgr = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 	}
 	
 	public void EnableNetworkRoaming(boolean flag) {
 		bAbleNetworkRoaming = flag;
+	}
+	
+	public boolean IsWIFIAvailabe() {
+		try {
+			if(mWIFIMgr.isWifiEnabled()) {
+				if(mWIFIMgr.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
+					
+					WifiInfo info = mWIFIMgr.getConnectionInfo();
+					
+					if(info.getNetworkId() != -1) {
+						return true;
+					} else {
+						Log.w(TAG, "No network is connected by WIFI");
+					}
+				} else {
+					Log.w(TAG, "WIFI state is not enabled");
+				}
+			} else {
+				Log.w(TAG, "WIFI is not enabled");
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "IsWIFIAvailabe:" + e.toString());
+		}
+		
+		return false;
 	}
 	
 	public boolean IsPhoneAvaiable() {
@@ -78,14 +108,16 @@ public class CurrencyInternetConnection {
 		try {
 			URL	url = new URL(szURL);
 			
-			if(IsPhoneAvaiable()) {
-				InputStream in = url.openStream();
-				in.close();
-				
-				return true;
+			if(IsPhoneAvaiable() == false) {
+				if(IsWIFIAvailabe() == false) {
+					return false;
+				}				
 			}
 			
-			return false;
+			InputStream in = url.openStream();
+			in.close();
+			
+			return true;
 		} catch (Exception e) {
 			Log.e(TAG, "CreateConnection: " + e.toString());
 			return false;
