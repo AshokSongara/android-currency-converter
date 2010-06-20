@@ -123,7 +123,7 @@ public class ActivityMain extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	Log.d(TAG, "MainActivity:onCreate >>>>>");
+    	Log.d(TAG, "onCreate >>>>>");
     	
         super.onCreate(savedInstanceState);
         
@@ -131,7 +131,7 @@ public class ActivityMain extends Activity {
 	        // Note: Android system will select the best layout file 
 	        // from the res folder.
 	        // Read Android developers documents: 
-	        // "Dev Guide"->"Framework Topics"->"Resources and Assets"->"Resources and Internationalization" for more information
+	        // "Dev Guide"->"Framework Topics"->"Application Resources"->"Providing Resources" for more information
 	        setContentView(R.layout.main);
 	        
 	        // initialize control variables
@@ -204,12 +204,12 @@ public class ActivityMain extends Activity {
         	Log.e(TAG, "onCreate:" + e.toString());
         }
     	
-        Log.d(TAG, "MainActivity:onCreate <<<<<");
+        Log.d(TAG, "onCreate <<<<<");
     }
     
     @Override
     public void onStart() {
-    	Log.d(TAG, "MainActivity:onStart >>>>>");
+    	Log.d(TAG, "onStart >>>>>");
     	
     	super.onStart();
     	
@@ -238,48 +238,48 @@ public class ActivityMain extends Activity {
     		Log.e(TAG, "Error:" + e.toString());
     	}
     	
-    	Log.d(TAG, "MainActivity:onStart <<<<<");
+    	Log.d(TAG, "onStart <<<<<");
     }
     
     @Override
     public void onRestart() {
-    	Log.d(TAG, "MainActivity:onRestart >>>>>");
+    	Log.d(TAG, "onRestart >>>>>");
     	
     	super.onRestart();
     	
-    	Log.d(TAG, "MainActivity:onRestart <<<<<");
+    	Log.d(TAG, "onRestart <<<<<");
     }
     
     @Override
     public void onResume() {
-    	Log.d(TAG, "MainActivity:onResume >>>>>");
+    	Log.d(TAG, "onResume >>>>>");
     	
     	super.onResume();
     	
-    	Log.d(TAG, "MainActivity:onResume <<<<<");
+    	Log.d(TAG, "onResume <<<<<");
     }
     
     @Override
     public void onPause() {
-    	Log.d(TAG, "MainActivity:onPause >>>>>");
+    	Log.d(TAG, "onPause >>>>>");
     	
     	super.onPause();
     	
-    	Log.d(TAG, "MainActivity:onPause <<<<<");
+    	Log.d(TAG, "onPause <<<<<");
     }
     
     @Override
     public void onStop() {
-    	Log.d(TAG, "MainActivity:onStop >>>>>");
+    	Log.d(TAG, "onStop >>>>>");
     	
     	super.onStop();
     	
-    	Log.d(TAG, "MainActivity:onStop <<<<<");
+    	Log.d(TAG, "onStop <<<<<");
     }
     
     @Override
     public void onDestroy() {
-    	Log.d(TAG, "MainActivity:onDestroy >>>>>");
+    	Log.d(TAG, "onDestroy >>>>>");
     	
     	super.onDestroy();
     	
@@ -306,12 +306,12 @@ public class ActivityMain extends Activity {
     		Log.e(TAG, "onDestroy" + e.toString());
     	}
     	
-    	Log.d(TAG, "MainActivity:onDestroy <<<<<");
+    	Log.d(TAG, "onDestroy <<<<<");
     }
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-    	Log.d(TAG, "MainActivity:onSaveInstanceState >>>>>");
+    	Log.d(TAG, "onSaveInstanceState >>>>>");
     	
     	// backup current textview content
     	String txt_CA = m_text_Currency[ITEM_CURRENCYA].getText().toString();
@@ -320,7 +320,7 @@ public class ActivityMain extends Activity {
     	
     	outState.putString(KEY_BK_EDITTEXTA, txt_CA);
     	
-    	Log.d(TAG, "MainActivity:onSaveInstanceState <<<<<");
+    	Log.d(TAG, "onSaveInstanceState <<<<<");
     }
     
     @Override
