@@ -302,6 +302,11 @@ public class ActivityMain extends Activity {
 	    	editor.putLong(KEY_LASTUPDATETIME, m_lastupdatetime);    	
 	    	
 	    	editor.commit();
+	    	
+	    	if(m_DB != null) {
+	    		m_DB.CloseDB();
+	    		m_DB = null;
+	    	}
     	} catch (Exception e) {
     		Log.e(TAG, "onDestroy" + e.toString());
     	}

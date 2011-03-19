@@ -154,10 +154,16 @@ public class CurrencyConverterDB {
 	
 	@Override
 	public void finalize() {
-		if(core_db.isOpen()) {
-			Log.d(TAG, "Close database...");
-			core_db.close();
-			core_db = null;
+		CloseDB();
+	}
+	
+	public void CloseDB() {
+		if(core_db != null) {
+			if(core_db.isOpen()) {
+				Log.d(TAG, "Close database...");
+				core_db.close();
+				core_db = null;
+			}
 		}
 	}
 	
