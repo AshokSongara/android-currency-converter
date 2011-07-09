@@ -1,5 +1,5 @@
 /*
-	Copyright 2010 Kwok Ho Yin
+	Copyright 2010, 2011 Kwok Ho Yin
 
    	Licensed under the Apache License, Version 2.0 (the "License");
    	you may not use this file except in compliance with the License.
@@ -178,6 +178,10 @@ public class ActivityMain extends Activity {
 		        // when users press enter key, close soft keyboard automatically
 		        m_text_Currency[i].setImeOptions(EditorInfo.IME_ACTION_DONE);
 	        }
+	        
+	        // set EditText control will be focused on itself when "enter" key is pressed
+	        m_text_Currency[ITEM_CURRENCYA].setNextFocusDownId(R.id.EditTextCurrencyA);
+	        m_text_Currency[ITEM_CURRENCYB].setNextFocusDownId(R.id.EditTextCurrencyB);
 	        
 	        // create currency rate list adapter
 	        adapter_currencyratelist = new CurrencyRateListAdapter(this, CurrencyConverterDB.currency_longname, CurrencyConverterDB.currency_icon, m_DB.GetAllData());
@@ -495,6 +499,8 @@ public class ActivityMain extends Activity {
     	int nSelected = 0;
     	
 		public boolean onKey(View v, int keyCode, KeyEvent event) {
+			boolean ret_flag = false;
+			
 			if(v.getId() == R.id.EditTextCurrencyA) {
 				nSelected = ITEM_CURRENCYA;
 			} else {
@@ -508,19 +514,20 @@ public class ActivityMain extends Activity {
 					case KeyEvent.KEYCODE_ENTER:
 						if(nSelected == ITEM_CURRENCYA) {
 							// change current selected currency and update another one 
-							updateCurrencyDisplay(ITEM_CURRENCYB);
+							updateCurrencyDisplay(ITEM_CURRENCYB);							
 						} else {
 							// change current selected currency and update another one 
 							updateCurrencyDisplay(ITEM_CURRENCYA);
 						}
-						return true;
+						ret_flag = true;
+						break;
 						
 					default:
 						break;
 				}
 			}
 			
-			return false;
+			return ret_flag;
 		}    	
     };
     
@@ -633,7 +640,7 @@ public class ActivityMain extends Activity {
     		}
     		
     		str_result = formCurrencyDisplay(result);
-    		m_text_Currency[ITEM_CURRENCYA].setText(str_result);
+    		m_text_Currency[ITEM_CURRENCYA].setText(str_result);    		
     	} else {
     		if(rate_CA == 0) {
     			result = 0;
