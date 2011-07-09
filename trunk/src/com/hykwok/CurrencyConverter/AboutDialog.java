@@ -1,5 +1,5 @@
 /*
-	Copyright 2010 Kwok Ho Yin
+	Copyright 2010, 2011 Kwok Ho Yin
 
    	Licensed under the Apache License, Version 2.0 (the "License");
    	you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public class AboutDialog extends Dialog implements OnClickListener {
 	// about messages
 	private static final String str_about[] = {
 			"<b>Currency Converter</b>",
-			"Copyright 2010 Kwok Ho Yin",
+			"Copyright 2010, 2011 Kwok Ho Yin",
 			"Licensed under the Apache License, Version 2.0",
 			"",
 			"Credits:",
@@ -39,6 +39,7 @@ public class AboutDialog extends Dialog implements OnClickListener {
 			"IconEden Free Icons. Available at http://www.iconeden.com/",
 			"",
 			"History:",
+			"0.2	Fix editbox clears output value automatically if enter key is pressed",
 			"0.1	Initial release"
 	};
 
