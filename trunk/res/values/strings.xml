@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-	Copyright 2010 Kwok Ho Yin
+	Copyright 2010-2012 Kwok Ho Yin
 
    	Licensed under the Apache License, Version 2.0 (the "License");
    	you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@
 	<string name="szCNY">Chinese yuan renminbi</string>
 	<string name="szHKD">Hong Kong dollar</string>
 	<string name="szIDR">Indonesian rupiah</string>
+	<string name="szILS">Israeli shekel</string>
 	<string name="szINR">Indian rupee</string>
 	<string name="szKRW">South Korean won</string>
 	<string name="szMXN">Mexican peso</string>

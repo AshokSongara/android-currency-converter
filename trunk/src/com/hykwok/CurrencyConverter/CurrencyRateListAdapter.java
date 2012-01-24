@@ -1,5 +1,5 @@
 /*
-	Copyright 2010 Kwok Ho Yin
+	Copyright 2010-2012 Kwok Ho Yin
 
    	Licensed under the Apache License, Version 2.0 (the "License");
    	you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ public class CurrencyRateListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder	holder;				
 		
-		Log.d(TAG, ">>>>> getView: position=" + Integer.toString(position));
+		//Log.d(TAG, ">>>>> getView: position=" + Integer.toString(position));
 		
 		try {
 			if(convertView == null) {
@@ -117,7 +117,7 @@ public class CurrencyRateListAdapter extends BaseAdapter {
 			Log.e(TAG, "getView:" + e.toString());
 		}
 		
-		Log.d(TAG, "<<<<< getView: position=" + Integer.toString(position));
+		//Log.d(TAG, "<<<<< getView: position=" + Integer.toString(position));
 		
 		return convertView;
 	}

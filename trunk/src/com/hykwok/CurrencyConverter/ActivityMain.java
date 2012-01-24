@@ -1,5 +1,5 @@
 /*
-	Copyright 2010, 2011 Kwok Ho Yin
+	Copyright 2010 - 2012 Kwok Ho Yin
 
    	Licensed under the Apache License, Version 2.0 (the "License");
    	you may not use this file except in compliance with the License.
@@ -226,11 +226,24 @@ public class ActivityMain extends Activity {
 			
 			m_lastupdatetime = mPrefs.getLong(KEY_LASTUPDATETIME, 0);
     		m_enableRoaming = mPrefs.getBoolean(KEY_ROAMING_OPT, false);
-
+    		
+    		// Update Preferences
+	    	SharedPreferences.Editor editor = mPrefs.edit();
+	    	
+	    	String sel = mPrefs.getString(KEY_LISTVIEW_OPT, "1");
+	    	String precision = mPrefs.getString(KEY_PRECISION, "2");
+	    	
+	    	editor.putString(KEY_LISTVIEW_OPT, sel);
+	    	editor.putString(KEY_PRECISION, precision);
+	    	
+	    	editor.commit();
+	    	
+	    	// show last time update
     		TextView lastupdatetext = (TextView)findViewById(R.id.TextViewLastUpdate);
     		String sztime = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT).format(new Date(m_lastupdatetime));
     		lastupdatetext.setText(sztime);
-    		    		
+    		
+    		// start background update service?
 	    	if(mPrefs.getBoolean(KEY_SERVICE_OPT, false) == true) {
 	    		i.putExtra(BROADCAST_KEY_ROAMING_OPT, m_enableRoaming);
 	    		i.putExtra(BROADCAST_KEY_LASTUPDATETIME, m_lastupdatetime);	    		
