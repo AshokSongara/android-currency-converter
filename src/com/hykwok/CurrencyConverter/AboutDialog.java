@@ -39,6 +39,7 @@ public class AboutDialog extends Dialog implements OnClickListener {
 			"IconEden Free Icons. Available at http://www.iconeden.com/",
 			"",
 			"History:",
+			"0.4    Fix some bugs",
 			"0.3	Fix preference display bug, Remove 'Estonian kroon' and add 'Israeli shekel'",
 			"0.2	Fix editbox clears output value automatically if enter key is pressed",
 			"0.1	Initial release"
