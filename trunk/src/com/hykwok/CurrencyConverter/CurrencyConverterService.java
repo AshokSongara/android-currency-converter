@@ -1,5 +1,5 @@
 /*
-	Copyright 2010 Kwok Ho Yin
+	Copyright 2010, 2012 Kwok Ho Yin
 
    	Licensed under the Apache License, Version 2.0 (the "License");
    	you may not use this file except in compliance with the License.
@@ -100,8 +100,16 @@ public class CurrencyConverterService extends Service {
 		Log.d(TAG, "onStart >>>>>");    	
 		super.onStart(i, startId);
 		
-		ref_time = i.getExtras().getLong(BROADCAST_KEY_LASTUPDATETIME);
-		ref_roaming = i.getExtras().getBoolean(BROADCAST_KEY_ROAMING_OPT, false);
+		// default values
+		ref_time = 0;
+		ref_roaming = false;
+		
+		try {
+			ref_time = i.getExtras().getLong(BROADCAST_KEY_LASTUPDATETIME);
+			ref_roaming = i.getExtras().getBoolean(BROADCAST_KEY_ROAMING_OPT, false);
+		} catch (Exception e) {
+			Log.e(TAG, "onStart: " + e.toString());
+		}
 		
 		// start a new thread to handle database update
 		parser_thread_alive = true;
